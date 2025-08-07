@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use App\Models\Contact;
 
 class ContactCrud extends Component
@@ -30,6 +31,7 @@ class ContactCrud extends Component
 
     public function closeModal()
     {
+        File::cleanDirectory(storage_path('app/private/livewire-tmp'));
         $this->isModalOpen = false;
     }
 

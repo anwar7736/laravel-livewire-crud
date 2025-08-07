@@ -6,6 +6,7 @@
     @endif
 
     <button wire:click="openModal()" class="btn btn-primary mb-3">Create Contact</button>
+    <a href="/" wire:navigate class="btn btn-primary mb-3">Goto Home</a>
 
     @if ($isModalOpen)
         @include('livewire.contact-modal')
@@ -39,9 +40,9 @@
                     <td>{{ $contact->phone }}</td>
                     <td>
                         <button type="button" wire:click="edit({{ $contact->id }})"
-                            class="btn btn-sm btn-info">Edit</button>
+                            class="btn btn-sm btn-success"><i class="fa fa-edit"></i></button>
                         <button type="button" wire:click="confirmDelete({{ $contact->id }})"
-                            class="btn btn-sm btn-danger">Delete</button>
+                            class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                     </td>
                 </tr>
             @empty
