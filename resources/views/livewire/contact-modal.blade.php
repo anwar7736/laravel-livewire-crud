@@ -30,6 +30,16 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="form-group mb-2">
+                        <label>Gender</label>
+                        <label> <input type="radio" value="Male" class="" wire:model="gender" name="gender">
+                            Male</label>
+                        <label> <input type="radio" value="Female" class="ml-2" wire:model="gender" name="gender">
+                            Female</label>
+                        @error('gender')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
                     <div class="mb-2">
                         <label>Photo</label>
                         <input type="file" class="form-control" wire:model="photo">

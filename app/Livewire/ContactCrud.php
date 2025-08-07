@@ -12,7 +12,7 @@ class ContactCrud extends Component
 {
     use WithFileUploads;
 
-    public $contacts, $name, $email, $phone, $photo, $old_photo, $contact_id;
+    public $contacts, $name, $email, $phone, $gender, $photo, $old_photo, $contact_id;
     public $isModalOpen = false;
     protected $listeners = ['delete'];
 
@@ -40,6 +40,7 @@ class ContactCrud extends Component
         $this->name = '';
         $this->email = '';
         $this->phone = '';
+        $this->gender = '';
         $this->photo = null;
         $this->old_photo = null;
         $this->contact_id = null;
@@ -53,6 +54,7 @@ class ContactCrud extends Component
             'name'  => 'required',
             'email' => 'required|email|unique:contacts,email',
             'phone' => 'required|unique:contacts,phone',
+            'gender' => 'required',
             'photo' => 'nullable|image|max:2048',
         ]);
 
@@ -62,6 +64,7 @@ class ContactCrud extends Component
             'name'  => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
+            'gender' => $this->gender,
             'photo' => $imagePath,
         ]);
 
@@ -74,10 +77,11 @@ class ContactCrud extends Component
     public function update()
     {
         $this->validate([
-            'name'  => 'required',
-            'email' => 'required|email|unique:contacts,email,' . $this->contact_id,
-            'phone' => 'required|unique:contacts,phone,' . $this->contact_id,
-            'photo' => 'nullable|image|max:2048',
+            'name'   => 'required',
+            'email'  => 'required|email|unique:contacts,email,' . $this->contact_id,
+            'phone'  => 'required|unique:contacts,phone,' . $this->contact_id,
+            'gender' => 'required',
+            'photo'  => 'nullable|image|max:2048',
         ]);
 
         $contact = Contact::findOrFail($this->contact_id);
@@ -94,6 +98,7 @@ class ContactCrud extends Component
             'name'  => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
+            'gender' => $this->gender,
             'photo' => $imagePath,
         ]);
 
@@ -109,6 +114,7 @@ class ContactCrud extends Component
         $this->name = $contact->name;
         $this->email = $contact->email;
         $this->phone = $contact->phone;
+        $this->gender = "Male";
         $this->old_photo = $contact->photo;
         $this->resetErrorBag();
         $this->isModalOpen = true;
