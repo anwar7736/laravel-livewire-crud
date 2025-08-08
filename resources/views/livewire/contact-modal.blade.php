@@ -53,7 +53,7 @@
                             </div>
                         @elseif ($old_photo)
                             <div class="mt-2">
-                                <img src="{{ asset('storage/' . $old_photo) }}" class="rounded" width="100">
+                                <img src="{{ getFile($old_photo, "contacts") }}" class="rounded" width="100">
                             </div>
                         @endif
                     </div>

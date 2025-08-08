@@ -13,7 +13,6 @@
         "laravel/folio": "^1.1",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "laravel/ui": "^4.6",
         "livewire/livewire": "^3.6"
     },
     "require-dev": {
@@ -30,11 +29,15 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/helper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
+            
         }
     },
     "scripts": {
