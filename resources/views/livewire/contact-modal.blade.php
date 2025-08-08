@@ -46,7 +46,6 @@
                         @error('photo')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
-
                         @if ($photo)
                             <div class="mt-2">
                                 <img src="{{ $photo->temporaryUrl() }}" class="rounded" width="100">
@@ -60,7 +59,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" wire:click="closeModal" class="btn btn-secondary">Cancel</button>
-                    <button type="submit" class="btn btn-primary">{{ $contact_id ? 'Update' : 'Save' }}</button>
+                    <button wire:loading.attr="disabled" wire:target="photo" type="submit" class="btn btn-success">{{ $contact_id ? 'Update' : 'Save' }}</button>
                 </div>
             </form>
         </div>

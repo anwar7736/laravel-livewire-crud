@@ -52,7 +52,7 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                                   <img src="{{ getFile(auth()->user()->photo, 'users') }}" height="35" width="35" class="border border-danger rounded-circle" /> {{ Auth::user()->name }}
                                 </a>
 
                                 @livewire('auth.logout')
@@ -71,34 +71,34 @@
     @livewireScripts
 
     <script>
-        document.addEventListener('livewire:init', () => {
-            Livewire.on('swal:confirm-delete', data => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "This action cannot be undone!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Livewire.dispatch('delete', {
-                            id: data.id
-                        });
-                    }
-                });
-            });
-
-            Livewire.on('swal:success', data => {
-                Swal.fire({
-                    icon: 'success',
-                    title: data.message,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('swal:success', data => {
+            Swal.fire({
+                icon: 'success',
+                title: data.message,
+                showConfirmButton: false,
+                timer: 1500
             });
         });
+        Livewire.on('swal:delete-confirm', data => {
+            const { id } = data;
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This action cannot be undone!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.dispatch('delete', {
+                        id
+                    });
+                }
+            });
+        });
+    });
     </script>
 </body>
 

@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Helpers\Toastr;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Contact;
+use Livewire\Attributes\On;
 
 class ContactCrud extends Component
 {
@@ -13,7 +15,6 @@ class ContactCrud extends Component
 
     public $contacts, $name, $email, $phone, $gender, $photo, $old_photo, $contact_id;
     public $isModalOpen = false;
-    protected $listeners = ['delete'];
 
 
     public function render()
@@ -36,13 +37,15 @@ class ContactCrud extends Component
 
     public function resetFields()
     {
-        $this->name = '';
-        $this->email = '';
-        $this->phone = '';
-        $this->gender = '';
-        $this->photo = null;
-        $this->old_photo = null;
-        $this->contact_id = null;
+        $this->reset([
+            'name',
+            'email',
+            'phone',
+            'gender',
+            'photo',
+            'old_photo',
+            'contact_id'
+        ]);
         $this->resetErrorBag();
     }
 
@@ -57,13 +60,13 @@ class ContactCrud extends Component
             'photo' => 'nullable|image|max:2048',
         ]);
 
-        if($this->photo){
-           $inputs['photo'] = uploadFile($this->photo, 'contacts');
+        if ($this->photo) {
+            $inputs['photo'] = uploadFile($this->photo, 'contacts');
         }
         Contact::create($inputs);
-        $this->dispatch('swal:success', message: 'Contact Created Successfully');
         $this->closeModal();
         $this->resetFields();
+        flash()->success('Contact Created Successfully!');
     }
 
     // ✅ Update Existing Contact
@@ -78,17 +81,16 @@ class ContactCrud extends Component
         ]);
 
         $contact = Contact::findOrFail($this->contact_id);
-
+        $inputs['photo'] = $this->old_photo;
         if ($this->photo) {
-           deleteFile($this->photo, "contacts");
-           $inputs['photo'] = uploadFile($this->photo, 'contacts');
+            deleteFile($this->old_photo, "contacts");
+            $inputs['photo'] = uploadFile($this->photo, 'contacts');
         }
 
         $contact->update($inputs);
-
-        $this->dispatch('swal:success', message: 'Contact Updated Successfully');
         $this->closeModal();
         $this->resetFields();
+        flash()->success('Contact Updated Successfully!');
     }
 
     public function edit($id)
@@ -104,17 +106,12 @@ class ContactCrud extends Component
         $this->isModalOpen = true;
     }
 
-    public function confirmDelete($id)
-    {
-        $this->dispatch('swal:confirm-delete', id: $id);
-    }
-
-    public function delete($id)
+    #[On('delete')]
+    public function destroy($id)
     {
         $contact = Contact::findOrFail($id);
         deleteFile($contact->photo, "contacts");
         $contact->delete();
-
-        $this->dispatch('swal:success', message: 'Contact Deleted Successfully');
+        flash()->success('Contact Deleted Successfully!');
     }
 }

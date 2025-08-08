@@ -6,7 +6,6 @@
     @endif
 
     <button wire:click="openModal()" class="btn btn-primary mb-3">Create Contact</button>
-    <a href="/" wire:navigate class="btn btn-primary mb-3">Goto Home</a>
 
     @if ($isModalOpen)
         @include('livewire.contact-modal')
@@ -28,12 +27,8 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>
-                        @if ($contact->photo)
-                            <img src="{{ asset('storage/' . $contact->photo) }}" width="40" height="40"
-                                class="rounded-circle">
-                        @else
-                            <span class="text-muted">No Image</span>
-                        @endif
+                        <img src="{{ getFile($contact->photo, "contacts") }}" width="40" height="40"
+                            class="rounded-circle">
                     </td>
                     <td>{{ $contact->name }}</td>
                     <td>{{ $contact->email }}</td>
@@ -41,8 +36,10 @@
                     <td>
                         <button type="button" wire:click="edit({{ $contact->id }})"
                             class="btn btn-sm btn-success"><i class="fa fa-edit"></i></button>
-                        <button type="button" wire:click="confirmDelete({{ $contact->id }})"
-                            class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                        <button type="button" wire:click="$dispatch('swal:delete-confirm', {id: {{ $contact->id}} })"
+                            class="btn btn-sm btn-danger">
+                            <i class="fa fa-trash"></i>
+                        </button>
                     </td>
                 </tr>
             @empty

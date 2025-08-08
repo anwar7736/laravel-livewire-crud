@@ -20,8 +20,7 @@ class Register extends Component
             'password'  => ['required', 'min:4', 'confirmed'],
             'photo'     => ['nullable', 'image', 'mimes:jpg,png,jpeg,svg,gif', 'max:2048']
         ]);
-
-        if(isset($photo)){
+        if($this->photo){
             $inputs['photo'] = uploadFile($this->photo, "users");
         }
 

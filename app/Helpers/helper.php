@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Livewire\Livewire;
 
 function deleteTempImages()
 {
@@ -10,40 +11,36 @@ function deleteTempImages()
 
 function uploadFile($file, string $folder, string $disk = 'public'): ?string
 {
-    if (!$file) {
-        return null;
+    $fileName = null;
+    if ($file && $folder) {
+        $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+        $file->storeAs("uploads/{$folder}", $fileName, $disk);
     }
-
-    $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
-
-    $path = $file->storeAs("uploads/" . $folder, $fileName, $disk);
 
     return $fileName;
 }
 
 function deleteFile(?string $fileName, string $folder): bool
 {
-    if (empty($fileName) || empty($folder)) {
-        return false;
+    if ($fileName && $folder) {
+        $path = public_path("storage/uploads/{$folder}/{$fileName}");
+        if (file_exists($path)) {
+            unlink($path);
+        }
     }
 
-    $filePath = public_path("uploads/{$folder}/{$fileName}");
-
-    if (file_exists($filePath)) {
-        return unlink($filePath);
-    }
-
-    return false;
+    return true;
 }
 
-function getFile(?string $fileName, string $folder): bool
+function getFile(?string $fileName, string $folder)
 {
-    if (empty($fileName) || empty($folder)) {
-        return ""; //avatar image
+    $imagePath = asset("no-image.jpg");
+    if ($fileName && $folder) {
+        $path = public_path("storage/uploads/{$folder}/{$fileName}");
+        if (file_exists($path)) {
+            $imagePath = asset("storage/uploads/{$folder}/$fileName");
+        }
     }
 
-    $filePath = public_path("uploads/{$folder}/{$fileName}");
-
-
-    return $filePath;
+    return $imagePath;
 }
