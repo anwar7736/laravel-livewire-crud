@@ -1,5 +1,6 @@
 <?php
 
+use Flasher\Laravel\Facade\Flasher;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
@@ -43,4 +44,20 @@ function getFile(?string $fileName, string $folder)
     }
 
     return $imagePath;
+}
+
+function success_msg($message){
+    flash()->success($message);
+}
+
+function error_msg($message){
+    flash()->error($message);
+}
+
+function warning_msg($message){
+    flash()->warning($message);
+}
+
+function validateBdPhoneNo() {
+    return 'regex:/^(?:\+?88)?01[3-9]\d{8}$/';
 }

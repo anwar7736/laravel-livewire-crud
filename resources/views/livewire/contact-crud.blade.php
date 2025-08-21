@@ -6,6 +6,7 @@
     @endif
 
     <button wire:click="openModal()" class="btn btn-primary mb-3">Create Contact</button>
+    <a href="{{ route('purchase.create') }}" class="btn btn-success mb-3" wire:navigate>Create Purchase</a>
 
     @if ($isModalOpen)
         @include('livewire.contact-modal')

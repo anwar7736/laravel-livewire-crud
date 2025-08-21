@@ -26,10 +26,11 @@
         }
     </style>
     <h3 class="mb-4">Create Purchase</h3>
+    <a href="{{ route('contacts') }}" class="btn btn-dark mb-3" wire:navigate>Manage Contact</a>
 
     <!-- Product Search -->
     <div class="mb-3 position-relative">
-        <label for="productSearch" class="form-label">Search Product</label>
+        <label for="productSearch" class="form-label">Search/Scan Product</label>
         <input type="text" id="productSearch" wire:model.live.debounce.500ms="search" class="form-control"
             placeholder="Type product name or SKU..." autofocus>
 
@@ -50,44 +51,55 @@
     <!-- Purchase Table -->
     <form method="POST" wire:submit="addPurchase">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body table-responsive">
                 <table class="table table-bordered align-middle text-center">
-                    @php
-                        $total = 0;
-                    @endphp
                     <thead class="table-light">
                         <tr>
-                            <th>SL.</th>
-                            <th>SKU</th>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th width="120">Quantity</th>
+                            <th width="5%">SL.</th>
+                            <th width="10%">SKU</th>
+                            <th width="10%">Image</th>
+                            <th width="25%">Name</th>
+                            <th width="20%">Price</th>
+                            <th width="20%">Quantity</th>
                             <th>Subtotal</th>
-                            <th width="80">Action</th>
+                            <th width="10%">Action</th>
                         </tr>
                     </thead>
                     <tbody id="purchaseTable">
                         <!-- Example Row -->
-                        @foreach ($items as $key => $item)
-                            @php
-                                $rowTotal = $item['quantity'] * $item['price'];
-                                $total += $rowTotal;
-                            @endphp
+                        @forelse ($items as $key => $item)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item['sku'] }}</td>
                                 <td><img src="{{ $item['image'] }}" class="product-img" alt="Product"></td>
                                 <td>{{ $item['name'] }}</td>
-                                <td>{{ $item['price'] }}</td>
-                                <td><input type="number" class="form-control form-control-sm text-center"
-                                        min="1" wire:model.lazy="items.{{ $key }}.quantity">
+                                <td>
+                                    <input type="number" class="form-control form-control text-center" min="0"
+                                         wire:model.lazy="items.{{ $key }}.price">
+                                         @error("items.$key.price")
+                                           <div class="text-danger">
+                                                {{$message}}
+                                           </div>
+                                         @enderror
+                                    </td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm text-center" min="0"
+                                        wire:model.lazy="items.{{ $key }}.quantity">
+                                         @error("items.$key.quantity")
+                                           <div class="text-danger">
+                                                {{$message}}
+                                           </div>
+                                         @enderror
                                 </td>
-                                <td>{{ $rowTotal }}</td>
+                                <td>{{ $item['sub_total'] }}</td>
                                 <td><button type="button" wire:click="removeItem({{ $key }})"
                                         class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button></td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                               <td colspan="8" class="text-center text-danger text-bold"> No Items Found!</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                     <tfoot>
                         <tr>

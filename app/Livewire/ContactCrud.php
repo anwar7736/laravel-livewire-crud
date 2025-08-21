@@ -16,6 +16,24 @@ class ContactCrud extends Component
     public $contacts, $name, $email, $phone, $gender, $photo, $old_photo, $contact_id;
     public $isModalOpen = false;
 
+    public function rules() {
+       $rules = [
+            'name'  => 'required',
+            'gender' => 'required',
+            'photo' => 'nullable|image|max:2048',
+       ];
+
+       if($this->contact_id){
+            $rules['email'] = 'required|email|unique:contacts,email,' . $this->contact_id;
+            $rules['phone'] = 'required|unique:contacts,phone,' . $this->contact_id;
+       }else{
+            $rules['email'] = 'required|email|unique:contacts,email';
+            $rules['phone'] = 'required|unique:contacts,phone';
+       }
+
+       return $rules;
+    }
+
 
     public function render()
     {
@@ -52,13 +70,7 @@ class ContactCrud extends Component
     // ✅ Create New Contact
     public function store()
     {
-        $inputs = $this->validate([
-            'name'  => 'required',
-            'email' => 'required|email|unique:contacts,email',
-            'phone' => 'required|unique:contacts,phone',
-            'gender' => 'required',
-            'photo' => 'nullable|image|max:2048',
-        ]);
+        $inputs = $this->validate();
 
         if ($this->photo) {
             $inputs['photo'] = uploadFile($this->photo, 'contacts');
@@ -72,13 +84,7 @@ class ContactCrud extends Component
     // ✅ Update Existing Contact
     public function update()
     {
-        $inputs = $this->validate([
-            'name'   => 'required',
-            'email'  => 'required|email|unique:contacts,email,' . $this->contact_id,
-            'phone'  => 'required|unique:contacts,phone,' . $this->contact_id,
-            'gender' => 'required',
-            'photo'  => 'nullable|image|max:2048',
-        ]);
+        $inputs =$this->validate();
 
         $contact = Contact::findOrFail($this->contact_id);
         $inputs['photo'] = $this->old_photo;
@@ -114,4 +120,10 @@ class ContactCrud extends Component
         $contact->delete();
         flash()->success('Contact Deleted Successfully!');
     }
+
+    public function updated($property)
+    {
+        $this->validate();
+    }
+
 }
