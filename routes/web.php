@@ -7,6 +7,7 @@ use App\Livewire\Auth\Register;
 use App\Livewire\ContactCrud;
 use App\Livewire\Welcome;
 use App\Livewire\PurchaseCreate;
+use App\Livewire\TestComponent;
 use Illuminate\Support\Facades\Route;
 
 
@@ -19,6 +20,7 @@ Route::middleware(RedirectIfAuthenticated::class)->group(function () {
 
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('/test', TestComponent::class)->name('test');
     Route::get('/contacts', ContactCrud::class)->name('contacts');
     Route::get('/purchase-create', PurchaseCreate::class)->name('purchase.create');
 });

@@ -2,10 +2,8 @@
 
 namespace App\Livewire;
 
-use App\Helpers\Toastr;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Contact;
 use Livewire\Attributes\On;
 
@@ -67,7 +65,7 @@ class ContactCrud extends Component
         $this->resetErrorBag();
     }
 
-    // ✅ Create New Contact
+    //  Create New Contact
     public function store()
     {
         $inputs = $this->validate();

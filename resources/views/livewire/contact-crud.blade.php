@@ -1,5 +1,9 @@
 <div class="container mt-5">
     <h2 class="mb-4">Livewire Contact CRUD with Modal</h2>
+    <div class="alert alert-danger alert-dismissible fade show w-25" role="alert" wire:offline>
+      <strong>You are now offline.</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 
     @if (session()->has('message'))
         <div class="alert alert-success">{{ session('message') }}</div>
@@ -25,30 +29,10 @@
         </thead>
         <tbody>
             @forelse($contacts as $contact)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>
-                        <img src="{{ getFile($contact->photo, "contacts") }}" width="40" height="40"
-                            class="rounded-circle">
-                    </td>
-                    <td>{{ $contact->name }}</td>
-                    <td>{{ $contact->email }}</td>
-                    <td>{{ $contact->phone }}</td>
-                    <td>
-                        <button type="button" wire:click="edit({{ $contact->id }})"
-                            class="btn btn-sm btn-success"><i class="fa fa-edit"></i></button>
-                        <button type="button" wire:click="$dispatch('swal:delete-confirm', {id: {{ $contact->id}} })"
-                            class="btn btn-sm btn-danger">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
+                @include('livewire.partials.contact-row')
             @empty
-                <tr>
-                    <td colspan="6" class="text-center text-danger">No contacts found.</td>
-                </tr>
+                @include('livewire.partials.no-items', ["message" => "contacts"])
             @endforelse
-        </tbody>
-    </table>
-
+            </tbody>
+        </table>
 </div>
